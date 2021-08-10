@@ -1,33 +1,50 @@
-import React, { Component } from 'react';
-import { View,Text,
+import * as React from "react";
+import {
+  View,
+  Text,
   Button,
   StyleSheet,
   ScrollView,
   Image,
   Modal,
   TextInput,
-  Dimensions,TouchableOpacity  } from 'react-native';
-
-  import { Avatar } from "react-native-paper";
-const deviceHeight = Dimensions.get("window").height;
-
-
+  Dimensions,TouchableOpacity
+} from "react-native";
+//import Animated from "react-native-reanimated";
+//import BottomSheet from "reanimated-bottom-sheet";
+import BookForm2 from "./BookForm2";
+import AddMember from "./AddMember";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
-
-class ExampleTwo extends Component {
-  static navigationOptions = {
-    header: null
+import { Avatar } from "react-native-paper";
+const deviceHeight = Dimensions.get("window").height;
+export default class BookForm1 extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      show: false,
+    };
+  }
+  show = () => {
+    this.setState({ show: true });
   };
-
-  defaultScrollViewProps = {
-    keyboardShouldPersistTaps: 'handled',
-    contentContainerStyle: {
-      flex: 1,
-      justifyContent: 'center'
-    }
+  close = () => {
+    this.setState({ show: false });
   };
+  //   onTouchOutside = () {
 
-  onNextStep = () => {
+  //   }
+  // onPressItem = () => {
+  //   this.props.navigation.navigate("AddMember");
+  // };
+
+
+  // just case u need to scrollUp automatic or manual by user
+
+      
+
+
+    onNextStep = () => {
     console.log('called next step');
   };
 
@@ -39,15 +56,43 @@ class ExampleTwo extends Component {
     console.log('called on submit step.');
   };
 
+
   render() {
-    const progressStepsStyle = {
+    if (Text.defaultProps == null) {
+      Text.defaultProps = {};
+      Text.defaultProps.allowFontScaling = false;
+    }
+    //   const renderContent1 = () => <BookForm2 />;
+    //   const sheetRef = React.useRef();
+    //   fall = new Animated.Value(1);
+    let { show } = this.state;
+    // const [modalVisible, setModalVisible] = useState(false);
+    const { onTouchOutside } = this.props;
+//this should go to add form
+    let popupRef = React.createRef();
+    const onShowPopup = () => {
+      popupRef.show();
+    };
+    let popupAddMemberRef = React.createRef();
+    const onShowPopupAddMember = () => {
+      popupAddMemberRef.show();
+    };
+    const { navigation } = this.props;
+
+
+
+
+
+  const progressStepsStyle = {
       activeStepIconBorderColor: '#686868',
       activeLabelColor: '#686868',
       activeStepNumColor: 'white',
       activeStepIconColor: '#686868',
       completedStepIconColor: '#686868',
       completedProgressBarColor: '#686868',
-      completedCheckColor: '#4bb543'
+      completedCheckColor: '#4bb543',
+      topOffset:20,
+      marginBottom:10,
     };
 
     const buttonTextStyle = {
@@ -55,8 +100,15 @@ class ExampleTwo extends Component {
       fontWeight: 'bold'
     };
 
+
     return (
-      <View style={{ backgroundColor: "white",
+      <Modal
+        animationType={"fade"}
+        transparent={true}
+        visible={show}
+        onRequestClose={this.close}
+      >
+        <View style={{ backgroundColor: "white",
             // padding: 16,
             // paddingRight: 0,
             // paddingLeft: 0,
@@ -92,7 +144,7 @@ class ExampleTwo extends Component {
             }}
           >
             <Image
-              source={require("./assets/snack-icon.png")}
+              source={require("../../../assets/images/images.jpg")}
               resizeMode="contain"
               style={{
                 width: 50,
@@ -113,34 +165,17 @@ class ExampleTwo extends Component {
           >
             Booking For ?
           </Text>
-          
-          
+
         <ProgressSteps {...progressStepsStyle}>
           <ProgressStep
-            label="First"
+            //label="First"
             onNext={this.onNextStep}
             onPrevious={this.onPrevStep}
             scrollViewProps={this.defaultScrollViewProps}
-            nextBtnTextStyle={buttonTextStyle}
-            previousBtnTextStyle={buttonTextStyle}
+            removeBtnRow={true}
           >
 
-          
-            <View style={{ alignItems: 'center' }}>
-              <Text>This is the content within step 1!</Text>
-            </View>
-          </ProgressStep>
-
-
-          <ProgressStep
-            label="Second"
-            onNext={this.onNextStep}
-            onPrevious={this.onPrevStep}
-            scrollViewProps={this.defaultScrollViewProps}
-            nextBtnTextStyle={buttonTextStyle}
-            previousBtnTextStyle={buttonTextStyle}
-          >
-          {/* end this suffer */}
+            {/* end this suffer */}
             <View style={{
               justifyContent: "space-around",
               alignItems: "center",
@@ -159,17 +194,19 @@ class ExampleTwo extends Component {
             >
               <Avatar.Image
                 size={60}
-                source={require("./assets/snack-icon.png")}
+                source={require("../../../assets/images/22-220721_circled-user-male-type-user-colorful-icon-png.png")}
               />
 
               <Text style={{ fontWeight: "bold", fontSize: 17 }}>
                 Hi Andrew
               </Text>
             </View>
+<TouchableOpacity onPress={this.onShowPopup}
+          >
 
-             <View
-             style={{ alignSelf: "center", paddingTop: 10 }}
-             >
+              <View
+              style={{ alignSelf: "center", paddingTop: 10 }}
+              >
             <View
             style={{
                   borderWidth: 1,
@@ -181,16 +218,12 @@ class ExampleTwo extends Component {
                   paddingTop: 4,
                 }}
             >
-          <TouchableOpacity>
-
-           <Text
+            <Text
             style={{ fontSize: 30, fontWeight: "bold", color: "#536FC1" }}
             >
             +
             </Text>
 
-
-          </TouchableOpacity>
 
 
           <Text
@@ -205,25 +238,54 @@ class ExampleTwo extends Component {
                 </Text>
             </View>
 
-            <View style={{ marginTop: 20 }}>
+           
+
+
+            {/* <View style={{ marginTop: 20 }}>
             <Button
               title="NEXT"
               color="#536FC1"
               // borderRadius={10}
               //   onPress={() => sheetRef.current.snapTo()}
 
-              //onPress={onShowPopup}
+              onPress={this.onNextStep}
             />
 
-            {/*end this suffer!*/}
           </View>
+          */}
 
-             </View>
+        
 
+              </View>
+               </TouchableOpacity>
+
+               {/* ill add feature when user dosent click the button tihis  view dosent came up*/}
+
+            </View>
+
+            <AddMember
+            navigation={this.props.navigation}
+            ref={(target) => (popupAddMemberRef = target)}
+          />
+          </ProgressStep>
+
+          
+
+
+          <ProgressStep
+            //label="Second"
+            onNext={this.onNextStep}
+            onPrevious={this.onPrevStep}
+            scrollViewProps={this.defaultScrollViewProps}
+            nextBtnTextStyle={buttonTextStyle}
+            previousBtnTextStyle={buttonTextStyle}
+          >
+          <View style={{ alignItems: 'center' }}>
+              <Text>This is the content within step 3!</Text>
             </View>
           </ProgressStep>
           <ProgressStep
-            label="Third"
+            //label="Third"
             onNext={this.onNextStep}
             onPrevious={this.onPrevStep}
             scrollViewProps={this.defaultScrollViewProps}
@@ -237,8 +299,50 @@ class ExampleTwo extends Component {
          
         </ProgressSteps>
       </View>
+      </Modal>
     );
   }
 }
-
-export default ExampleTwo;
+const styles = StyleSheet.create({
+  number: {
+    borderRadius: 50,
+    backgroundColor: "#D5F3FD",
+    // padding: 10,
+    textAlign: "center",
+    alignSelf: "center",
+    paddingTop: 9,
+    paddingRight: 2,
+    height: 40,
+    width: 40,
+    color: "black",
+    fontWeight: "bold",
+  },
+  straightline: {
+    fontWeight: "bold",
+    borderWidth: 2,
+    height: 0,
+    width: 100,
+    alignSelf: "center",
+    borderTopColor: "#BFBFBF",
+    borderBottomColor: "transparent",
+    borderRightColor: "transparent",
+    borderLeftColor: "transparent",
+  },
+  member: {
+    fontWeight: "bold",
+    fontSize: 12,
+  },
+  search: {
+    // height: 40,
+    // margin: 12,
+    borderWidth: 1,
+    // paddingLeft: 15,
+    // paddingRight: 15,
+    // width: 150,
+    borderBottomColor: "black",
+    borderTopColor: "transparent",
+    borderRightColor: "transparent",
+    borderLeftColor: "transparent",
+    textDecorationLine: "underline",
+  },
+});
